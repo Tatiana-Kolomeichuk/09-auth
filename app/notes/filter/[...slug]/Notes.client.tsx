@@ -1,0 +1,74 @@
+"use client";
+
+import css from "./page.module.css";
+
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
+import { useDebouncedCallback } from "use-debounce";
+import toast from "react-hot-toast";
+import Link from "next/link";
+
+import { fetchNotes } from "@/lib/api";
+import SearchBox from "@/components/SearchBox/SearchBox";
+import Pagination from "@/components/Pagination/Pagination";
+import NoteList from "@/components/NoteList/NoteList";
+import { FetchTagNote } from "@/types/note";
+
+type NotesClientProps = {
+  tag: FetchTagNote;
+};
+
+export default function NotesClient({ tag }: NotesClientProps) {
+  const [page, setPage] = useState(1);
+  const [search, setSearch] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+
+  const { data, isError } = useQuery({
+    queryKey: ["notes", page, debouncedSearch, tag],
+    queryFn: () =>
+      fetchNotes({
+        page,
+        perPage: 12,
+        search: debouncedSearch,
+        tag: tag === "all" ? undefined : tag,
+      }),
+    placeholderData: keepPreviousData,
+  });
+
+  useEffect(() => {
+    if (isError) toast.error("Failed to load notes");
+  }, [isError]);
+
+  const handleDebouncedSearch = useDebouncedCallback((value: string) => {
+    setDebouncedSearch(value);
+    setPage(1);
+  }, 500);
+
+  return (
+    <div className={css.app}>
+      <header className={css.toolbar}>
+        <SearchBox
+          value={search}
+          onChange={(value) => {
+            setSearch(value);
+            handleDebouncedSearch(value);
+          }}
+        />
+
+        {data && data.totalPages > 1 && (
+          <Pagination
+            pageCount={data.totalPages}
+            currentPage={page}
+            onPageChange={setPage}
+          />
+        )}
+
+        <Link className={css.button} href="/notes/action/create">
+          Create note +
+        </Link>
+      </header>
+
+      {data && data.notes.length > 0 && <NoteList notes={data.notes} />}
+    </div>
+  );
+}
