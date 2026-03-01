@@ -14,7 +14,7 @@ const initUser: User = {
   avatar: "",
 };
 
-export const useLogin = create<IsLogin>((set) => ({
+export const useLogin = create<IsLogin>()((set) => ({
   isAuthenticated: false,
   user: initUser,
   setUser: (user: User) => set(() => ({ user, isAuthenticated: true })),
