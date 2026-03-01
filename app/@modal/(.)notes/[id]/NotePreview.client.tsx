@@ -2,9 +2,10 @@
 
 import css from './NotePreview.module.css';
 import Modal from "@/components/Modal/Modal";
-import { fetchNoteById } from "@/lib/api";
+import { fetchNoteById } from '@/lib/api/clientApi';
+
 import { useQuery } from "@tanstack/react-query";
-import { useParams, useRouter } from 'next/navigation';
+import {  useRouter } from 'next/navigation';
 
 type NotePreviewProps = {
     noteId: string;
