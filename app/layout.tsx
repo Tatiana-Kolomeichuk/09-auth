@@ -4,6 +4,7 @@ import Header from "@/components/Header/Header";
 import Footer from "@/components/Footer/Footer";
 import TanStackProvider from '@/components/TanStackProvider/TanStackProvider';
 import { Roboto } from 'next/font/google';
+import AuthProvider from "@/components/AuthProvider/AuthProvider";
 
 
 
@@ -13,7 +14,7 @@ export const metadata: Metadata = {
    openGraph: {
       title: 'Note Hub',
       description: 'My note hub',
-      url: 'https://08-zustand-gray-zeta.vercel.app/',
+      // url: 'https://08-zustand-gray-zeta.vercel.app/',
       siteName: 'NoteHub',
       images: [
         {
@@ -45,11 +46,13 @@ export default function RootLayout({
  return (
     <html lang="en">
       <body className={`${roboto.variable}`}>
-        <TanStackProvider>
+       <TanStackProvider>
+         <AuthProvider>
           <Header />
           {children}
           {modal}
-          <Footer />
+           <Footer />
+           </AuthProvider>
         </TanStackProvider>
       </body>
     </html>
