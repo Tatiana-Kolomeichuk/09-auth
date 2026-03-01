@@ -5,7 +5,7 @@ import {
 } from "@tanstack/react-query";
 
 import css from "./page.module.css";
-import { fetchNotes } from "@/lib/api";
+import { fetchNotes } from "@/lib/api/clientApi";
 import NotesClient from "./Notes.client";
 import { FetchTagNote } from "@/types/note";
 import { Metadata } from "next";
